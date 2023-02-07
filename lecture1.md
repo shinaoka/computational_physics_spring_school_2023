@@ -31,9 +31,9 @@ section::after {
 # 何を学べるの？
 
 * 虚時間グリーン関数のコンパクトな中間表現基底
-  - $G(\tau) = \sum_{l=0}^{L-1} U_l(\tau) g_l$
+  - $G(\tau) = \sum_{l=0}^{L-1} U_l(\tau) g_l + \epsilon$
   - $L\propto \log \beta W$ ($\beta$: inverse temperature, $W$: band width)
-  - $L \propto \log (1/\epsilon)$ ($\epsilon$: desired accuracy)
+  - $\epsilon \propto \exp(-a L)$ ($\epsilon$: truncation error, $a>0$)
 * 虚時間・虚周波数におけるスパースメッシュ: # of points $\simeq L$.
 * SparseIR.jl (Julia), sparse-ir (Python)
 
@@ -42,14 +42,18 @@ section::after {
 
 * 固体物理の記事 (古いライブラリirbasisに基づいてます)
 * $\uparrow$の英語訳・加筆 + 新ライブラリsparse-irに更新 
+* sparse-ir tutorials (大量のサンプルコード)
 
 ---
 # 概要
 
-1. 虚時間グリーン関数の性質のまとめ
-2. 中間表現基底
-3. スパースサンプリング法
-4. 関連技術紹介
+* Part I
+  1. 虚時間グリーン関数の性質のまとめ
+  2. 中間表現基底
+  3. スパースサンプリング法
+* Part II
+  1. 開発環境のセットアップ
+  
 
 
 
@@ -172,16 +176,49 @@ We need a compact basis with exponetial convergence.
 
 
 ---
-# SVD of kernel
+# Mathematical background: singular value decomposition (SVD)
+
+Any complex-valued matrix $A$ of size $M \times N$ can be decomposed as
+
+$$
+A = U \Sigma V^\dagger,
+$$
+
+where
+$$
+U = (u_1, u_2, \cdots, u_{L}): M \times L,
+$$
+$$
+V = (v_1, v_2, \cdots, v_{L}): N \times L,
+$$
+where $u_i^\dagger u_j = \delta_{ij}$, $v_i^\dagger v_j = \delta_{ij}$, $L = \mathrm{min}(M, N)$. $\Sigma$ is a diagonal matrix with non-negative diagonal elements $s_1 \ge s_2 \ge \cdots \ge s_L \ge 0$.
+
+* Unique up to a phase if the singular values $s_i$ are non-degenerate.
+* If $A$ is a real matrix, $U$ and $V$ are also real orthogonal matrices.
+
+---
+#  Intermediate representation
+Shinaoka _et al._ (2017)
+
+
+---
+# Logistic kernel
+
+
+---
+# Singular value expansion
 
 ---
 # Singular values 
 
 ---
-# How basis functions look like?
+# Basis functions
 
 ---
 # Expansion in IR basis
+
+---
+# Note: Connection to numerical analytic continuation
 
 ---
 # Sparse meshes in frequency and time domains
