@@ -13,10 +13,28 @@ section::after {
 }
 </style>
 
+<!-- add center keyword for figure -->
+<style>
+img[alt~="center"] {
+  display: block;
+  margin: 0 auto;
+}
+</style>
+
+$$
+\newcommand{\iv}{{\mathrm{i}\nu}}
+\newcommand{\ii}{{\mathrm{i}}}
+\newcommand{\iw}{{\mathrm{i}\omega}}
+\newcommand{\wmax}{{\omega_\mathrm{max}}}
+\newcommand{\dd}{{\mathrm{d}}}
+$$
+
 虚時間グリーン関数に対するスパースモデリング入門
 ===
 
 ##### 品岡寛 (埼玉大学)
+
+![center height:300px](fig/IR.png)
 
 ---
 # 前提知識
@@ -40,9 +58,9 @@ section::after {
 ---
 # 参考資料
 
-* 固体物理の記事 (古いライブラリirbasisに基づいてます)
-* $\uparrow$の英語訳・加筆 + 新ライブラリsparse-irに更新 
-* sparse-ir tutorials (大量のサンプルコード)
+* 固体物理 2021年6月 [温度グリーン関数の情報圧縮に基づく高速量子多体計算法](https://shinaoka.sakura.ne.jp/data/kotai2021.pdf)
+* $\uparrow$の英語訳・加筆 + 新ライブラリsparse-irに更新 <br>[H. Shinaoka _et al._, SciPost Phys. Lect. Notes 63 (2022)](https://scipost.org/10.21468/SciPostPhysLectNotes.63)
+* sparse-ir tutorials (大量のサンプルコード)<br>[https://spm-lab.github.io/sparse-ir-tutorial/index.html](https://spm-lab.github.io/sparse-ir-tutorial/index.html)
 
 ---
 # 概要
@@ -202,20 +220,162 @@ Shinaoka _et al._ (2017)
 
 
 ---
+# Analytic continuation kernel
+
+Fermion & boson:
+$$
+\begin{align}
+    G(\iv) &= \int_{-\infty}^\infty \dd\omega \underbrace{\frac{1}{\iv - \omega}}_{\equiv K(\iv, \omega)} A(\omega)
+\end{align}
+$$
+
+$K(\iv, \omega)$ is system independent and $A(\omega) = -\ii(G^R(\omega) - G^A(\omega))$.
+
+---
+# Analytic continuation kernel
+
+$$
+\begin{align}
+    G(\tau) &= - \int_{-\infty}^\infty \dd\omega K(\tau, \omega) A(\omega),
+\end{align}
+$$
+
+$$
+\begin{align}
+    K(\tau, \omega) &\equiv - \frac{1}{\beta} \sum_{\iv} e^{-\iv \tau} K(\iv, \omega) =
+    \begin{cases}
+        \frac{e^{-\tau\omega}}{1\textcolor{red}{+}e^{-\beta\omega}} & (\mathrm{fermion})\\
+        \frac{e^{-\tau\omega}}{1\textcolor{red}{-}e^{-\beta\omega}} & (\mathrm{boson})
+    \end{cases},
+\end{align}
+$$
+
+
+where $0 < \tau < \beta$.
+
+For bosons, $|K(\tau,\omega)| \rightarrow +\infty$ at $\omega\rightarrow 0$. We want to use the same kernel for fermion & boson. How?
+
+---
 # Logistic kernel
 
+$$
+\begin{equation}
+    G(\tau)= - \int_{-\infty}^\infty\dd{\omega} K^\mathrm{L}(\tau,\omega) \rho(\omega),
+\end{equation}
+$$
+
+where $K^\mathrm{L}(\tau, \omega)$ is the "logistic kernel" defined as
+
+$$
+K^\mathrm{L}(\tau, \omega) =  \frac{e^{-\tau\omega}}{1+e^{-\beta\omega}},
+$$
+
+and $\rho(\omega)$ is the modified spectral function
+
+$$
+\begin{align}
+    \rho(\omega) &\equiv 
+    \begin{cases}
+        A(\omega) & (\mathrm{fermion}),\\
+        \frac{A(\omega)}{\tanh(\beta \omega/2)} & (\mathrm{boson}).
+    \end{cases}
+\end{align}
+$$
+
+This trick has been widely used in the lattice QCD community for a long time. This was introduced into condensed matter physics in J. Kaye _et al._ (2022).
 
 ---
 # Singular value expansion
 
+We introduce an ultraviolet $0 < \wmax < \infty$ and a dimensionless parameter $\Lambda \equiv \wmax\beta$
+
+Because $K^\mathrm{L} \in C^\infty$ and $\in L^2$:
+
+$$
+K^\mathrm{L}(\tau, \omega) = \sum_{l=0}^\infty U_l(\tau) S_l V_l(\omega),
+$$
+
+for $-\wmax \le \omega \le \wmax$ and $0 \le \tau \le \beta$.
+
+Singular functions: $\int_{-\wmax}^\wmax \dd \omega V_l(\omega) V_{l'}(\omega) = \delta_{ll'}$ and $\int_{0}^\beta \dd \tau U_l(\tau) U_{l'}(\tau) = \delta_{ll'}$.
+
+$\rightarrow$ ``Indermediate represetation`` basis functions
+
+
+
 ---
 # Singular values 
+
+$\beta=10$ and $\wmax = 10$ ($\Lambda = 10^2$):
+![center height:400px](fig/IR_py_4_0.png)
+
+* Exponential decay
+* Number of relevant $S_l$ grows as $O(\log \Lambda)$ (only numerical evidence)
 
 ---
 # Basis functions
 
+* Even/odd functions for even/odd $l$
+* $l$ roots
+* Only numerical expressions
+
+
+![bg right
+ height:600px](fig/irbasis.png)
+
 ---
-# Expansion in IR basis
+
+
+# Basis functions in Matsubara frequency
+
+
+$$
+U_l(\iv) \equiv \int_0^\beta \dd \tau e^{\iv \tau} U_l(\tau).
+$$
+
+Fourier transform can be done numerically.
+
+![center height:250px](fig/IR.png)
+
+---
+# Expansion in IR
+
+$$
+G(\tau) = \sum_{l=0}^{L-1} G_l U_l(\tau) + \epsilon_L,
+$$
+
+$$
+\hat{G}(\mathrm{i}\nu) = \sum_{l=0}^{L-1} G_l \hat{U}_l(\mathrm{i}\nu) + \hat{\epsilon}_L,
+$$
+
+where $\epsilon_L,~\hat{\epsilon}_L \approx S_L$. The expansion coefficients $G_l$ can be determined from the spectral function as 
+
+$$
+G_l = -S_l \rho_l,
+$$
+
+where
+
+$$
+\rho_l = \int_{-\omega_\mathrm{max}}^{\omega_\mathrm{max}} \mathrm{d} \omega \rho(\omega) V_l(\omega).
+$$
+
+
+---
+# Convergence
+
+If $|\rho_l|$ is bounded from above, $|G_l|$ converges as fast as $S_l$ (system independent).
+
+For  $\rho(\omega) = \frac{1}{2} (\delta(\omega-1) + \delta(\omega+1))$ (fermion),
+
+$$
+\rho_l = \int_{-\omega_\mathrm{max}}^{\omega_\mathrm{max}} \mathrm{d} \omega \rho(\omega) V_l(\omega) = \frac{1}{2}(V_l(1) + V_l(-1)).
+$$
+
+
+![center height:400px](fig/IR_py_7_0.png)
+
+
 
 ---
 # Note: Connection to numerical analytic continuation
