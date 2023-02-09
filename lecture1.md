@@ -27,6 +27,11 @@ $$
 \newcommand{\iw}{{\mathrm{i}\omega}}
 \newcommand{\wmax}{{\omega_\mathrm{max}}}
 \newcommand{\dd}{{\mathrm{d}}}
+\newcommand{\tauk}{{\bar{\tau}_k}}
+\newcommand{\wk}{{\bar{\omega}^\alpha_k}}
+\newcommand{\vk}{{\bar{\nu}_k}}
+\newcommand{\hatFmat}{\hat{\mathbf{F}}}
+\newcommand{\Fmat}{{\mathbf{F}}}
 $$
 
 虚時間グリーン関数に対するスパースモデリング入門
@@ -54,6 +59,10 @@ $$
   - $\epsilon \propto \exp(-a L)$ ($\epsilon$: truncation error, $a>0$)
 * 虚時間・虚周波数におけるスパースメッシュ: # of points $\simeq L$.
 * SparseIR.jl (Julia), sparse-ir (Python)
+
+---
+# 応用例
+
 
 ---
 # 参考資料
@@ -302,7 +311,7 @@ Singular functions: $\int_{-\wmax}^\wmax \dd \omega V_l(\omega) V_{l'}(\omega) =
 $\rightarrow$ ``Indermediate represetation`` basis functions
 
 
-
+<!--
 ---
 # Singular values 
 
@@ -323,6 +332,24 @@ $\beta=10$ and $\wmax = 10$ ($\Lambda = 10^2$):
 ![bg right
  height:600px](fig/irbasis.png)
 
+-->
+
+
+---
+# Singular values
+
+![](fig/sluv.png)
+
+* Exponential decay
+* Number of relevant $S_l$ grows as $O(\log \Lambda)$ (only numerical evidence)
+
+---
+# Basis functions
+
+![](fig/sluv.png)
+
+* Even/odd functions for even/odd $l$
+* $l$ roots
 ---
 
 
@@ -366,11 +393,8 @@ $$
 
 If $|\rho_l|$ is bounded from above, $|G_l|$ converges as fast as $S_l$ (system independent).
 
-For  $\rho(\omega) = \frac{1}{2} (\delta(\omega-1) + \delta(\omega+1))$ (fermion),
-
-$$
-\rho_l = \int_{-\omega_\mathrm{max}}^{\omega_\mathrm{max}} \mathrm{d} \omega \rho(\omega) V_l(\omega) = \frac{1}{2}(V_l(1) + V_l(-1)).
-$$
+For  $\rho(\omega) = \frac{1}{2} (\delta(\omega-1) + \delta(\omega+1))$,
+$\rho_l = \int_{-\omega_\mathrm{max}}^{\omega_\mathrm{max}} \mathrm{d} \omega \rho(\omega) V_l(\omega) = \frac{1}{2}(V_l(1) + V_l(-1))$.
 
 
 ![center height:400px](fig/IR_py_7_0.png)
@@ -378,20 +402,175 @@ $$
 
 
 ---
-# Note: Connection to numerical analytic continuation
+# Reconstruction of spectral function
+
+Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
+
+A: Very difficult
+
+$$
+G(\tau) = G_\mathrm{exact}(\tau) + \delta(\tau),
+$$
+where $\delta(\tau)$ is noise.
+
+$$
+\rho_l = -(S_l)^{-1} ((G_l)_\mathrm{exact} + \delta_l),
+$$
+where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
 
 ---
-# Sparse meshes in frequency and time domains
+# Side story: Reconstructing spectral function
+
+Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
+
+A: Very numerical unstable!
+
+$$
+G(\tau) = G_\mathrm{exact}(\tau) + \delta(\tau),
+$$
+where $\delta(\tau)$ is noise.
+
+$$
+\rho_l = -(S_l)^{-1} ((G_l)_\mathrm{exact} + \delta_l),
+$$
+where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
+
+*Noise is amplified by small singular values.* $\rightarrow$ Reconstruction of spectral function is an ill-posed inverse problem. We need to use a regularized solver: MaxEnt, SpM, _etc._.
+
+
+
+
+<!--
+---
+# Sparseness of imaginary-time objects
+
+Numerical data of $G(\tau)$ contains *less* information than $\rho(\omega)$ due to the decaying singular values.
+
+IR is an optimal basis to take the advantage of the sparseness of imaginary-time objects.
+-->
 
 ---
-# Numerical Fourier transform
+# Sparse sampling
+Li, Wallerberger, Chikano, Yeh, Gull, and Shinaoka (2000)
 
 
 ---
-# Implementation of Dyson equation
+# Sparse time and frequency meshes
+
+Solving Dyson equation for given $\Sigma(\iw)$:
+
+$$
+G(\iw) = (G^{-1}_0(\iw) + \Sigma(\iw))^{-1}
+$$
+
+We do not want to solve the equation on a huge dense mesh:cry:
+
+Solve the equation on a sparse mesh of size $L$ and transform the result to IR of size $L$:smile:
+
+---
+# Heuristic choice of sampling points
+Simple rule: extrema (or somewhere in between two adjacent roots) of $U_L$
+
+$\beta=10$, $\wmax=10$, $L=30$:
+![center](fig/sparse_sampling_py_2_0.png)
+
+
+---
+# Heuristic choice of sampling points
+Simple rule: extrema (or somewhere in between two adjacent roots) of $U_L$
+
+$\beta=10$, $\wmax=10$, $L=30$:
+![center height:400px](fig/sparse_sampling_py_4_0.png)
+
+---
+# Transform from time/frequency to IR
+
+* Well conditioned fitting problem
+* Implemented in sparse-ir as stable linear transform
+
+
+$$
+\begin{align}
+    G_l &= \underset{G_l}{\mathrm{argmin}}
+        \sum_k \bigg| G(\tauk) - \sum_{l=0}^{N_\mathrm{smpl}-1} U_l(\tauk)G_l \bigg|^2\nonumber \\
+    &= (\Fmat^+ \boldsymbol{G})_l,
+\end{align}
+$$
+
+where we define $(\Fmat)_{kl} = U_l(\tauk)$ and $\Fmat^+$ is its pseudo inverse.
+
+---
+# Condition number
+
+* Numerical stability determined by the condition number of $\Fmat$
+* Lose *only* a few digits out of $\approx 16$ significant digits of 64bit float
+
+![bg right height:480px](fig/sparse_sampling_py_7_0.png)
+
+---
+# Numerical demonstration
+
+Two-pole model: $\beta=100$, $\wmax=1$: Almost 16 significant digits!
+
+![center height:450px](fig/samplingtauiw2.png)
+
+---
+# QA sessions
+
+
+---
+# How to implement diagrammatic equations
+
+---
+# Second-order perturbation theory
+
+* Solving Dyson equation in frequency space
+* Evaluating the self-energy in frequency space
 
 ---
 # Implementation of second-order perturbation theory
+
+[Online tutorial](https://spm-lab.github.io/sparse-ir-tutorial/src/second_order_perturbation_py.html)
+
+
+Hubbard model on a square lattice:
+$$
+\mathcal{H} = -t \sum_{\langle i, j\rangle}
+        c^\dagger_{i\sigma} c_{j\sigma}
+        + U \sum_i n_{i\uparrow} n_{i\downarrow}
+        - \mu \sum_i (n_{i\uparrow} + n_{i\downarrow}),
+$$
+where $t=1$ and $\mu = U/2$ (half filling).  $c^\dagger_{i\sigma}~(c_{i\sigma})$ a creation (annihilation) operator for an electron with spin $\sigma$ at site $i$.
+
+Non-interacting band dispersion:
+
+$$
+    \epsilon(\boldsymbol{k}) = -2 (\cos{k_x} + \cos{k_y}),
+$$
+
+where $\boldsymbol{k}=(k_x, k_y)$.
+
+---
+# Self-consistent equations
+
+
+$$
+\begin{align}
+    G(\mathrm{i}\nu, \boldsymbol{k}) &= \frac{1}{\mathrm{i}\nu - \epsilon(\boldsymbol{k}) + \mu - \Sigma(\iv, \boldsymbol{k})}~~~~(1)\\
+    &\downarrow\\
+    &\downarrow (\textcolor{red}{\iv \rightarrow \tau}, \boldsymbol{k} \rightarrow \boldsymbol{r})\\
+    &\downarrow\\
+    \Sigma(\tau, \boldsymbol{r}) &= U^2 G^2(\tau, \boldsymbol{r}) G(\beta-\tau, \boldsymbol{r})\\
+    &\downarrow\\
+    &\downarrow (\textcolor{red}{\tau \rightarrow \iv}, \boldsymbol{r} \rightarrow \boldsymbol{k})\\
+    &\downarrow\\
+    & \text{Go back to (1)}
+\end{align}
+$$
+
+
+$$
+$$
 
 
 ---
