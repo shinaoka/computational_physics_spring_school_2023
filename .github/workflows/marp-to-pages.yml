@@ -1,22 +1,31 @@
-name: Publish example slides to GitHub Pages
+name: Build and Deploy
+
 on:
   push:
     branches:
-      - main
+      - main # メインブランチの変更をトリガーにします
 
 jobs:
-  publish:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
 
-      - name: Convert Markdown into HTML and PDF
-        uses: KoharaKazuya/marp-cli-action@v2
-        with:
-          config-file: ./.marprc.yml
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Marp CLI
+        run: |
+          curl https://get.marp.app | sh
+          sudo mv marp /usr/local/bin/marp
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build PDF file
+        run: marp --pdf input.md
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./
+          branch: gh-pages # GitHub Pagesのブランチ名
+          folder: ./ # デプロイするフォルダ
