@@ -23,6 +23,8 @@ img[alt~="center"] {
 
 $$
 \newcommand{\iv}{{\mathrm{i}\nu}}
+\newcommand{\ivk}{{\mathrm{i}\bar{\nu}_k}}
+\newcommand{\tauk}{\bar{\tau_k}}
 \newcommand{\ii}{{\mathrm{i}}}
 \newcommand{\iw}{{\mathrm{i}\omega}}
 \newcommand{\wmax}{{\omega_\mathrm{max}}}
@@ -350,6 +352,8 @@ $\beta=10$ and $\wmax = 10$ ($\Lambda = 10^2$):
 
 * Even/odd functions for even/odd $l$
 * $l$ roots
+* Converge to Legendre polynomials at $\Lambda \rightarrow 0$
+
 ---
 
 
@@ -569,8 +573,31 @@ $$
 $$
 
 
+---
+# Self-consistent equations (sparse sampling)
+
 $$
+\begin{align}
+    G(\ivk, \boldsymbol{k}) &= \frac{1}{\ivk - \epsilon(\boldsymbol{k}) + \mu - \Sigma(\ivk, \boldsymbol{k})}~~~~(1)\\
+    &\downarrow\\
+    &\downarrow (\textcolor{red}{\ivk \rightarrow \mathrm{IR} \rightarrow \tauk},~\boldsymbol{k} \rightarrow \boldsymbol{r})\\
+    &\downarrow\\
+    \Sigma(\tauk, \boldsymbol{r}) &= U^2 G^2(\tauk, \boldsymbol{r}) G(\beta-\tauk, \boldsymbol{r})\\
+    &\downarrow\\
+    &\downarrow (\textcolor{red}{\tauk \rightarrow \mathrm{IR}\rightarrow \ivk}, \boldsymbol{r} \rightarrow \boldsymbol{k})\\
+    &\downarrow\\
+    & \text{Go back to (1)}
+\end{align}
 $$
+
+The whole calculaiton can be performed on sparse meshes.
+
+
+<!--
+---
+# Numerical examples
+
+We will run the notebooks in the second part of this lecture!
 
 
 ---
@@ -578,3 +605,4 @@ $$
 
 * Minmax
 * Discrete Lehmann reprensetation
+-->
