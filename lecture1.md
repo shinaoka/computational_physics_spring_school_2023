@@ -227,7 +227,7 @@ where $u_i^\dagger u_j = \delta_{ij}$, $v_i^\dagger v_j = \delta_{ij}$, $L = \ma
 
 ---
 #  Intermediate representation
-Shinaoka _et al._ (2017)
+Shinaoka _et al._ Phys. Rev. B 96, 035147 (2017)
 
 
 ---
@@ -455,7 +455,7 @@ IR is an optimal basis to take the advantage of the sparseness of imaginary-time
 
 ---
 # Sparse sampling
-Li, Wallerberger, Chikano, Yeh, Gull, and Shinaoka (2000)
+Li, Wallerberger, Chikano, Yeh, Gull, and Shinaoka, Phys. Rev. B 101, 035144 (2000)
 
 
 ---
@@ -591,6 +591,43 @@ $$
 $$
 
 The whole calculaiton can be performed on sparse meshes.
+
+
+---
+# Part II: Exercises with sparse-ir/SparseIR.jl
+
+
+---
+# Preparation
+
+### Python (sparse-ir)
+
+* Google Colab (maybe fast)
+* [binder](https://mybinder.org/v2/gh/SpM-lab/sparse-ir-binder/HEAD)
+
+### Julia (SparseIR.jl)
+
+* Your own environment (JupyterLab, VS Code...)
+* [binder](https://mybinder.org/v2/gh/SpM-lab/sparse-ir-binder/HEAD)
+
+
+---
+# Python: Google Colab
+
+* Notebook1 
+* 
+
+---
+# Julia:
+
+Please make sure your notebook environment works without `SparseIR.jl`.
+
+You can install dependencies for running notebooks as follows:
+
+```Julia
+using Pkg
+Pkg.add(["Plots", "FFTW", "FastGaussQuadrature", "LaTeXStrings", "SparseIR"])
+```
 
 
 <!--
