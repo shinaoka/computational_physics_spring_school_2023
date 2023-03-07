@@ -1,6 +1,6 @@
 ---
 marp: true
-header: 虚時間グリーン関数に対するスパースモデリング入門
+header: 虚時間グリーン関数に対するスパースモデリング入門(1)
 footer: ©2023 品岡寛
 # Page number
 paginate: true
@@ -23,6 +23,7 @@ img[alt~="center"] {
 
 $$
 \newcommand{\iv}{{\mathrm{i}\nu}}
+\newcommand{\iwk}{{\mathrm{i}\bar{\omega}_k}}
 \newcommand{\ivk}{{\mathrm{i}\bar{\nu}_k}}
 \newcommand{\tauk}{\bar{\tau_k}}
 \newcommand{\ii}{{\mathrm{i}}}
@@ -30,13 +31,13 @@ $$
 \newcommand{\wmax}{{\omega_\mathrm{max}}}
 \newcommand{\dd}{{\mathrm{d}}}
 \newcommand{\tauk}{{\bar{\tau}_k}}
-\newcommand{\wk}{{\bar{\omega}^\alpha_k}}
+\newcommand{\wk}{{\bar{\omega}_k}}
 \newcommand{\vk}{{\bar{\nu}_k}}
 \newcommand{\hatFmat}{\hat{\mathbf{F}}}
 \newcommand{\Fmat}{{\mathbf{F}}}
 $$
 
-虚時間グリーン関数に対するスパースモデリング入門
+虚時間グリーン関数に対するスパースモデリング入門(1)
 ===
 
 ##### 品岡寛 (埼玉大学)
@@ -53,7 +54,27 @@ $$
    - ...
 
 ---
-# 何を学べるの？
+# 何ができる？
+
+虚時間・松原形式に基づく「数値」計算の高速・省メモリ化
+
+
+---
+# 超伝導転移温度の第一原理計算
+
+T. Wang _et al._, PRB 102, 134503 (2020), Nb:  $T_\mathrm{C} = O(10)$ K
+
+* メモリの使用量が40分の1に!<br>[松原周波数 4096点$\rightarrow$ 103点]
+* 計算速度が20倍に!
+
+![center height:400px](fig/wang.png)
+
+<!--
+* 松原周波数 4096点$\rightarrow$ 103点
+-->
+
+---
+# 背後にある技術
 
 * 虚時間グリーン関数のコンパクトな中間表現基底
   - $G(\tau) = \sum_{l=0}^{L-1} U_l(\tau) g_l + \epsilon$
@@ -62,8 +83,7 @@ $$
 * 虚時間・虚周波数におけるスパースメッシュ: # of points $\simeq L$.
 * SparseIR.jl (Julia), sparse-ir (Python)
 
----
-# 応用例
+
 
 
 ---
@@ -591,55 +611,3 @@ $$
 $$
 
 The whole calculaiton can be performed on sparse meshes.
-
-
----
-# Part II: Exercises with sparse-ir/SparseIR.jl
-
-
----
-# Preparation
-
-### Python (sparse-ir)
-
-* Google Colab (maybe fast)
-* [binder](https://mybinder.org/v2/gh/SpM-lab/sparse-ir-binder/HEAD)
-
-### Julia (SparseIR.jl)
-
-* Your own environment (JupyterLab, VS Code...)
-* [binder](https://mybinder.org/v2/gh/SpM-lab/sparse-ir-binder/HEAD)
-
-
----
-# Python: Google Colab
-
-* Notebook1 
-* 
-
----
-# Julia:
-
-Please make sure your notebook environment works without `SparseIR.jl`.
-
-You can install dependencies for running notebooks as follows:
-
-```Julia
-using Pkg
-Pkg.add(["Plots", "FFTW", "FastGaussQuadrature", "LaTeXStrings", "SparseIR"])
-```
-
-
-<!--
----
-# Numerical examples
-
-We will run the notebooks in the second part of this lecture!
-
-
----
-# Related technologies
-
-* Minmax
-* Discrete Lehmann reprensetation
--->
