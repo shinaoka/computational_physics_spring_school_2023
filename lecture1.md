@@ -62,12 +62,18 @@ $$
 ---
 # 超伝導転移温度の第一原理計算
 
-T. Wang _et al._, PRB 102, 134503 (2020), Nb:  $T_\mathrm{C} = O(10)$ K
+T. Wang _et al._, PRB 102, 134503 (2020), Nb
 
 * メモリの使用量が40分の1に!<br>[松原周波数 4096点$\rightarrow$ 103点]
 * 計算速度が20倍に!
 
-![center height:400px](fig/wang.png)
+![bg right height:400px](fig/wang.png)
+
+
+---
+# 他の応用例
+
+![center height:550px](fig/applications.png)
 
 <!--
 * 松原周波数 4096点$\rightarrow$ 103点
