@@ -53,6 +53,7 @@ $$
 
 * 共通の環境を使うため、Google Colabを使います。
 * 簡単のためフェルミオンに限ります。
+* [Julia用のサンプルファイル](https://github.com/shinaoka/computational_physics_spring_school_2023/tree/main/samples/python)
 
 
 ---
