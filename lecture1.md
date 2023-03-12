@@ -62,15 +62,27 @@ $$
 ---
 # 超伝導転移温度の第一原理計算
 
-T. Wang _et al._, PRB 102, 134503 (2020), Nb:  $T_\mathrm{C} = O(10)$ K
+T. Wang _et al._, PRB 102, 134503 (2020), Nb
 
 * メモリの使用量が40分の1に!<br>[松原周波数 4096点$\rightarrow$ 103点]
 * 計算速度が20倍に!
 
-![center height:400px](fig/wang.png)
+![bg right height:400px](fig/wang.png)
+
+
+---
+# 他の応用例
+
+![center height:550px](fig/applications.png)
 
 <!--
 * 松原周波数 4096点$\rightarrow$ 103点
+
+
+---
+# データ量のスケーリング
+
+![center height:400px](fig/size_scaling.png)
 -->
 
 ---
@@ -82,7 +94,6 @@ T. Wang _et al._, PRB 102, 134503 (2020), Nb:  $T_\mathrm{C} = O(10)$ K
   - $\epsilon \propto \exp(-a L)$ ($\epsilon$: truncation error, $a>0$)
 * 虚時間・虚周波数におけるスパースメッシュ: # of points $\simeq L$.
 * SparseIR.jl (Julia), sparse-ir (Python)
-
 
 
 
@@ -100,8 +111,6 @@ T. Wang _et al._, PRB 102, 134503 (2020), Nb:  $T_\mathrm{C} = O(10)$ K
   1. 虚時間グリーン関数の性質のまとめ
   2. 中間表現基底
   3. スパースサンプリング法
-* Part II
-  1. 開発環境のセットアップ
   
 
 
@@ -330,7 +339,7 @@ for $-\wmax \le \omega \le \wmax$ and $0 \le \tau \le \beta$.
 
 Singular functions: $\int_{-\wmax}^\wmax \dd \omega V_l(\omega) V_{l'}(\omega) = \delta_{ll'}$ and $\int_{0}^\beta \dd \tau U_l(\tau) U_{l'}(\tau) = \delta_{ll'}$.
 
-$\rightarrow$ ``Indermediate represetation`` basis functions
+$\rightarrow$ **Indermediate-represetation** basis functions
 
 
 <!--
@@ -358,7 +367,7 @@ $\beta=10$ and $\wmax = 10$ ($\Lambda = 10^2$):
 
 
 ---
-# Singular values
+# Singular values: $\omega_\mathrm{max}=1$
 
 ![](fig/sluv.png)
 
@@ -366,7 +375,7 @@ $\beta=10$ and $\wmax = 10$ ($\Lambda = 10^2$):
 * Number of relevant $S_l$ grows as $O(\log \Lambda)$ (only numerical evidence)
 
 ---
-# Basis functions
+# Basis functions: $\omega_\mathrm{max}=1$ and $\beta=100$
 
 ![](fig/sluv.png)
 
@@ -415,51 +424,22 @@ $$
 ---
 # Convergence
 
-If $|\rho_l|$ is bounded from above, $|G_l|$ converges as fast as $S_l$ (system independent).
+$|G_l|$ converges as fast as $S_l$.
 
-For  $\rho(\omega) = \frac{1}{2} (\delta(\omega-1) + \delta(\omega+1))$,
-$\rho_l = \int_{-\omega_\mathrm{max}}^{\omega_\mathrm{max}} \mathrm{d} \omega \rho(\omega) V_l(\omega) = \frac{1}{2}(V_l(1) + V_l(-1))$.
-
-
-![center height:400px](fig/IR_py_7_0.png)
-
-
-
----
-# Reconstruction of spectral function
-
-Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
-
-A: Very difficult
-
+Example: 
+$\rho(\omega) = \frac{1}{2} (\delta(\omega-1) + \delta(\omega+1))$
 $$
-G(\tau) = G_\mathrm{exact}(\tau) + \delta(\tau),
+\begin{align}
+\rho_l &= \int_{-\omega_\mathrm{max}}^{\omega_\mathrm{max}} \mathrm{d} \omega \rho(\omega) V_l(\omega)\\
+&= \frac{1}{2}(V_l(1) + V_l(-1)).
+\end{align}
 $$
-where $\delta(\tau)$ is noise.
 
-$$
-\rho_l = -(S_l)^{-1} ((G_l)_\mathrm{exact} + \delta_l),
-$$
-where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
+$\beta=100$, $\wmax=1$.
 
----
-# Side story: Reconstructing spectral function
+![bg right height:350px](fig/IR_py_7_0.png)
 
-Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
 
-A: Very numerical unstable!
-
-$$
-G(\tau) = G_\mathrm{exact}(\tau) + \delta(\tau),
-$$
-where $\delta(\tau)$ is noise.
-
-$$
-\rho_l = -(S_l)^{-1} ((G_l)_\mathrm{exact} + \delta_l),
-$$
-where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
-
-*Noise is amplified by small singular values.* $\rightarrow$ Reconstruction of spectral function is an ill-posed inverse problem. We need to use a regularized solver: MaxEnt, SpM, _etc._.
 
 
 
@@ -484,15 +464,39 @@ Li, Wallerberger, Chikano, Yeh, Gull, and Shinaoka, Phys. Rev. B 101, 035144 (20
 Solving Dyson equation for given $\Sigma(\iw)$:
 
 $$
-G(\iw) = (G^{-1}_0(\iw) + \Sigma(\iw))^{-1}
+\begin{align}
+G(\iw) &= (G^{-1}_0(\iw) + \Sigma(\iw))^{-1}\\
+G_l &= \sum_{n=-\infty}^{+\infty} U^*_l(\iw_n) G(\iw_n)
+\end{align}
 $$
 
-We do not want to solve the equation on a huge dense mesh:cry:
+Q. Need to compute $G(\iw)$ on ALL Mastubara frequencies to determine $L$ IR coefficients $G_l$?
 
-Solve the equation on a sparse mesh of size $L$ and transform the result to IR of size $L$:smile:
+A. No, we need to know $G(\iw)$ on *appropriately chosen* $(\approx L)$ sampling frequencies.
+
 
 ---
-# Heuristic choice of sampling points
+# Dense mesh in $\tau$?
+
+Second-order self-energy (Hubbard $U$):
+
+$$
+\begin{align}
+\Sigma(\tau) &\propto U G^2(\tau) G(\beta-\tau)\nonumber\\
+G_l &= \int_0^\beta d\tau U_l(\tau) G(\tau)
+\end{align}
+$$
+
+Q: Need to compute $G(\tau)$ on a dense mesh of $\tau$?
+A: No, we need to know $G(\tau)$ on *appropriately chosen* $(\approx L)$ sampling points?
+
+<!--
+We do not want to solve the equation on a huge dense mesh:cry:
+Solve the equation on a sparse mesh of size $L$ and transform the result to IR of size $L$:smile:
+-->
+
+---
+# Sampling points
 Simple rule: extrema (or somewhere in between two adjacent roots) of $U_L$
 
 $\beta=10$, $\wmax=10$, $L=30$:
@@ -500,11 +504,12 @@ $\beta=10$, $\wmax=10$, $L=30$:
 
 
 ---
-# Heuristic choice of sampling points
+# Sampling points
 Simple rule: extrema (or somewhere in between two adjacent roots) of $U_L$
 
 $\beta=10$, $\wmax=10$, $L=30$:
 ![center height:400px](fig/sparse_sampling_py_4_0.png)
+
 
 ---
 # Transform from time/frequency to IR
@@ -526,8 +531,8 @@ where we define $(\Fmat)_{kl} = U_l(\tauk)$ and $\Fmat^+$ is its pseudo inverse.
 ---
 # Condition number
 
-* Numerical stability determined by the condition number of $\Fmat$
-* Lose *only* a few digits out of $\approx 16$ significant digits of 64bit float
+* Small condition number of $\Fmat$
+* If condition number is $10^p$, you may loos $p$ digits in transformation (three out of 16 digits)
 
 ![bg right height:480px](fig/sparse_sampling_py_7_0.png)
 
@@ -537,6 +542,13 @@ where we define $(\Fmat)_{kl} = U_l(\tauk)$ and $\Fmat^+$ is its pseudo inverse.
 Two-pole model: $\beta=100$, $\wmax=1$: Almost 16 significant digits!
 
 ![center height:450px](fig/samplingtauiw2.png)
+
+
+---
+# Stable and efficient numerical transform
+
+![center](fig/transforms2.png)
+
 
 ---
 # QA sessions
@@ -611,3 +623,47 @@ $$
 $$
 
 The whole calculaiton can be performed on sparse meshes.
+
+
+---
+
+---
+# Reconstruction of spectral function
+
+Please read [our article in the sparse-ir tutorial!](https://spm-lab.github.io/sparse-ir-tutorial/src/analytic_continuation_py.html)
+
+Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
+
+A: Very difficult
+
+$$
+G(\tau) = G_\mathrm{exact}(\tau) + \delta(\tau),
+$$
+where $\delta(\tau)$ is noise.
+
+$$
+\rho_l = -(S_l)^{-1} ((G_l)_\mathrm{exact} + \delta_l),
+$$
+where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
+
+---
+# Reconstruction of spectral function
+
+Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
+
+A: Very numerical unstable!
+
+$$
+G(\tau) = G_\mathrm{exact}(\tau) + \delta(\tau),
+$$
+where $\delta(\tau)$ is noise.
+
+$$
+\rho_l = -(S_l)^{-1} ((G_l)_\mathrm{exact} + \delta_l),
+$$
+where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
+
+*Noise is amplified by small singular values.* $\rightarrow$ ill-posed inverse problem. Needed a regularized solver: MaxEnt, SpM, Nevanlinna _etc_.
+
+
+"Nevanlinna.jl: A Julia implementation of Nevanlinna analytic continuation", K. Nogaki, J. Fei, E. Gull, HS, [arXiv:2302.10476v1](https://arxiv.org/abs/2302.10476)
