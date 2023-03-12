@@ -630,6 +630,8 @@ The whole calculaiton can be performed on sparse meshes.
 ---
 # Reconstruction of spectral function
 
+Please read [our article in the sparse-ir tutorial!](https://spm-lab.github.io/sparse-ir-tutorial/src/analytic_continuation_py.html)
+
 Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
 
 A: Very difficult
@@ -645,7 +647,7 @@ $$
 where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
 
 ---
-# Side story: Reconstructing spectral function
+# Reconstruction of spectral function
 
 Q: Can you reconstruct a spectral function from numerical data of $G(\tau)$? 
 
@@ -661,4 +663,7 @@ $$
 $$
 where $(G_l)_\mathrm{exact} = \int_0^\beta \dd \tau U_l(\tau)G_\mathrm{exact}(\tau)$ and $\delta_l = \int_0^\beta \dd \tau U_l(\tau)\delta(\tau)$.
 
-*Noise is amplified by small singular values.* $\rightarrow$ Reconstruction of spectral function is an ill-posed inverse problem. We need to use a regularized solver: MaxEnt, SpM, _etc._.
+*Noise is amplified by small singular values.* $\rightarrow$ ill-posed inverse problem. Needed a regularized solver: MaxEnt, SpM, Nevanlinna _etc_.
+
+
+"Nevanlinna.jl: A Julia implementation of Nevanlinna analytic continuation", K. Nogaki, J. Fei, E. Gull, HS, [arXiv:2302.10476v1](https://arxiv.org/abs/2302.10476)
