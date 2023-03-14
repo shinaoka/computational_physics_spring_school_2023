@@ -42,7 +42,39 @@ $$
 
 ##### 品岡寛 (埼玉大学)
 
-![center height:300px](fig/IR.png)
+![center height:280px](fig/IR.png)
+
+
+
+
+
+---
+# 自己紹介
+
+* 専門: 量子多体理論、第一原理計算、幾何学的フラストレート磁性･･･
+* 計算物理バックエンド (数値計算手法、ライブラリ)の開発に興味があります。<br>ALPS量子モンテカルロコード、スパースモデリング･･･
+* 海外との連携: ウィーン工科大学、ミシガン大、フリブール大 (スイス)、ミュンヘン大、King's College London･･･
+
+[グループウェブサイト](https://shinaoka.github.io)
+
+### 経歴
+1. 博士 (工学) 2009年3月@東大物工
+2. ポスドク 2009年3月〜2015年9月 (東大、産総研、チューリッヒ連邦工科大)
+3. 埼玉大 2015年10月〜
+
+---
+# 宣伝
+
+* 学術変革領域B「量子古典融合アルゴリズムが拓く計算物質科学」(代表: 品岡)
+  - 2023〜2025年度
+  - 計画研究班代表: 品岡、大久保、水上
+  - スパースモデリング、テンソルネットワーク、動的平均場理論、密度汎関数理論、変分波動関数理論、量子情報･･･
+
+近日、ポスドク・学生等の公募が出る予定！$\rightarrow$詳しくはポスターで
+
+* JST創発「2粒子レベルの量子埋め込み理論に基づく新規第一原理計算手法の開発と実証」2024年度から基本7年
+  - RA (博士課程学生支援あり)
+
 
 ---
 # 前提知識
@@ -102,7 +134,19 @@ T. Wang _et al._, PRB 102, 134503 (2020), Nb
 
 * 固体物理 2021年6月 [温度グリーン関数の情報圧縮に基づく高速量子多体計算法](https://shinaoka.sakura.ne.jp/data/kotai2021.pdf)
 * $\uparrow$の英語訳・加筆 + 新ライブラリsparse-irに更新 <br>[H. Shinaoka _et al._, SciPost Phys. Lect. Notes 63 (2022)](https://scipost.org/10.21468/SciPostPhysLectNotes.63)
-* sparse-ir tutorials (大量のサンプルコード)<br>[https://spm-lab.github.io/sparse-ir-tutorial/index.html](https://spm-lab.github.io/sparse-ir-tutorial/index.html)
+* sparse-ir tutorials (大量のサンプルコード)<br>[https://spm-lab.github.io/sparse-ir-tutorial/index.html](https://spm-lab.github.io/sparse-ir-tutorial/index.html)<br>IR基底の基礎、フーリエ変換、２次摂動、FLEX、DMFTなどなど<br>Python, Julia (Jupyter notebook) + Fortran
+
+
+---
+# 虚時間以外を圧縮したい！: Quantics tensor trains
+
+* 一般の時空依存性 (実時間、波数依存性など)の圧縮
+* 指数的に異なるエネルギー・長さスケール間の低エンタングルメント構造を仮定
+* Julia実装 (ITensors.jlベース)
+
+![QTT center height:250px](fig/qtt.png)
+
+[arXiv:2210.12984](http://arxiv.org/abs/2210.12984) (to appear in PRX)
 
 ---
 # 概要
