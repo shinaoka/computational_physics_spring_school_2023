@@ -59,9 +59,19 @@ $$
 ---
 # 最初の目標
 
-1. 松原グリーン関数を計算してみよう
-2. 松原和を密なメッシュで計算してみる
-3. 松原和を素なメッシュで計算してみる
+1. IR基底を構成してみる
+2. 松原グリーン関数を計算してみよう
+ - 松原和を密なメッシュで計算してみる
+ - 松原和を素なメッシュで計算してみる
+
+
+---
+
+# Exercise0: Compute IR basis
+
+
+1. Open [Notebook on Google Colab](https://colab.research.google.com/drive/1-QerQyprAbU5iHbB_8FFsXQDipm4bkpw?usp=sharing)
+2. Copy the notebook and run it!
 
 ---
 # Matsubara frequency summation
