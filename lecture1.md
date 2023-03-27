@@ -271,8 +271,8 @@ We need a compact basis with exponetial convergence.
 * **Intermediate represenation** (sparse-ir)
   - *Ab initio* calculations (Eliashberg theory, *GW*, Lichtenstein formula)
   - Diagrammatic calculations (FLEX)
-* Discrete Lehmann representation (implemented in sparse-ir as well)
-* Minmax method (from Kresse's group)
+* Discrete Lehmann representation (implemented in sparse-ir as well) [J. Kaye, K. Chen, and O. Parcollet, PRB 105, 235115 (2022)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.105.235115)
+* Minimax method (from Kresse's group) [M. Kaltak and G. Kresse, PRB 101, 205145 (2020)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.101.205145)
 
 
 ---
